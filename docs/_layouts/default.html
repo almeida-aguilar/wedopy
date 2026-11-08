@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }} - LEGO WeDo 2.0 con Python</title>
+  <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-left">
+      <button class="menu-toggle" aria-label="Abrir menú de navegación">☰</button>
+      <a href="{{ '/' | relative_url }}" class="logo-link">
+        <span>🤖 wedopy</span>
+        <span class="logo-badge">v{{ site.version }}</span>
+      </a>
+    </div>
+    <div class="header-right">
+      <a href="{{ '/guia-rapida.html' | relative_url }}" class="header-link">Guía Rápida</a>
+      <a href="{{ '/api/' | relative_url }}" class="header-link">API</a>
+      <a href="{{ site.github_repo }}" target="_blank" rel="noopener noreferrer" class="header-link">
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+        </svg>
+        <span>GitHub</span>
+      </a>
+    </div>
+  </header>
+
+  <div class="layout-container">
+    <aside class="site-sidebar">
+      <div class="sidebar-search">
+        <input type="text" id="sidebar-filter" placeholder="Filtrar documentación..." aria-label="Filtrar documentación">
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-title">Comenzando</div>
+        <ul class="sidebar-links">
+          <li><a href="{{ '/' | relative_url }}">Introducción</a></li>
+          <li><a href="{{ '/instalacion.html' | relative_url }}">Instalación</a></li>
+          <li><a href="{{ '/guia-rapida.html' | relative_url }}">Guía Rápida</a></li>
+          <li><a href="{{ '/hardware.html' | relative_url }}">Hardware WeDo 2.0</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-title">Referencia de la API</div>
+        <ul class="sidebar-links">
+          <li><a href="{{ '/api/' | relative_url }}">Resumen de la API</a></li>
+          <li><a href="{{ '/api/hub.html' | relative_url }}">Hub</a></li>
+          <li><a href="{{ '/api/motores.html' | relative_url }}">Motores (Motor / MotorGroup)</a></li>
+          <li><a href="{{ '/api/sensores.html' | relative_url }}">Sensores (Distancia y Tilt)</a></li>
+          <li><a href="{{ '/api/perifericos.html' | relative_url }}">LED y Botón</a></li>
+          <li><a href="{{ '/api/tareas.html' | relative_url }}">Tareas Cooperativas</a></li>
+          <li><a href="{{ '/api/excepciones.html' | relative_url }}">Excepciones</a></li>
+          <li><a href="{{ '/api/tiempo.html' | relative_url }}">Tiempo (running_time)</a></li>
+        </ul>
+      </div>
+
+      <div class="sidebar-group">
+        <div class="sidebar-title">Avanzado y Recursos</div>
+        <ul class="sidebar-links">
+          <li><a href="{{ '/arquitectura.html' | relative_url }}">Arquitectura y Seguridad</a></li>
+          <li><a href="{{ '/ejemplos.html' | relative_url }}">Ejemplos Prácticos</a></li>
+          <li><a href="{{ '/solucion-problemas.html' | relative_url }}">Solución de Problemas</a></li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <article class="content">
+        {{ content }}
+      </article>
+
+      {% if page.prev or page.next %}
+      <nav class="page-nav">
+        {% if page.prev %}
+        <a href="{{ page.prev.url | relative_url }}" class="nav-link-btn">
+          <span class="nav-direction">← Anterior</span>
+          <span class="nav-label">{{ page.prev.title }}</span>
+        </a>
+        {% else %}
+        <div></div>
+        {% endif %}
+
+        {% if page.next %}
+        <a href="{{ page.next.url | relative_url }}" class="nav-link-btn" style="text-align: right; margin-left: auto;">
+          <span class="nav-direction">Siguiente →</span>
+          <span class="nav-label">{{ page.next.title }}</span>
+        </a>
+        {% endif %}
+      </nav>
+      {% endif %}
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <p><strong>wedopy</strong> — Licencia MIT. Proyecto compatible con LEGO® WeDo 2.0 Smart Hub sobre BLE.</p>
+    <p style="margin-top: 0.35rem; font-size: 0.8rem;">LEGO® es una marca registrada del Grupo LEGO, que no patrocina ni avala este proyecto de código abierto.</p>
+  </footer>
+
+  <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
+</body>
+</html>

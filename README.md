@@ -1,7 +1,12 @@
 # wedopy
 
+[![Docs](https://img.shields.io/badge/docs-GitHub%20Pages-blue.svg)](https://almeida-aguilar.github.io/wedopy/)
+
 Python library for the **LEGO WeDo 2.0 Smart Hub** over Bluetooth Low Energy.
 Public API in Python, execution core in Cython. Implements design spec 1.2.0.
+
+📖 **Documentación online:** [https://almeida-aguilar.github.io/wedopy/](https://almeida-aguilar.github.io/wedopy/)
+
 
 ```python
 from wedopy import Hub, task
@@ -38,6 +43,7 @@ Linux/BlueZ is the first supported platform (BLE through `bleak`).
 | `wedopy_core/protocol/`   | UUIDs and constants                                                                             |
 | `wedopy_core/runtime/`    | `Timing` parameters, process `supervisor`                                                       |
 | `tests/`, `examples/`     | pytest suite (simulated hub), runnable examples                                                 |
+| `docs/`                   | Documentación web oficial compatible con GitHub Pages                                           |
 
 Deviations from the spec's tree: `src/wedo/` is `src/wedopy/` (the import name is `wedopy`); the
 compiled module is `wedopy_core._wedopy`; protocol codecs live in the Cython core instead of
