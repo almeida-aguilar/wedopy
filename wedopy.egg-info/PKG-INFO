@@ -1,0 +1,112 @@
+Metadata-Version: 2.4
+Name: wedopy
+Version: 0.1.0
+Summary: Python library for the LEGO WeDo 2.0 Smart Hub over BLE (API in Python, core in Cython)
+License-Expression: MIT
+Keywords: lego,wedo,wedo2,ble,bluetooth,robotics,iot,cython
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Education
+Classifier: Topic :: Software Development :: Embedded Systems
+Classifier: Topic :: System :: Hardware
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Classifier: Operating System :: POSIX :: Linux
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: bleak>=0.22
+Provides-Extra: dev
+Requires-Dist: pytest>=7; extra == "dev"
+Requires-Dist: Cython>=3.0; extra == "dev"
+Dynamic: license-file
+
+# wedopy
+
+Python library for the **LEGO WeDo 2.0 Smart Hub** over Bluetooth Low Energy.
+Public API in Python, execution core in Cython. Implements design spec 1.2.0.
+
+```python
+from wedopy import Hub, task
+
+with Hub() as hub:
+    motor = hub.motor("A")
+    motor.run(100)
+```
+
+## Install (development)
+
+```bash
+python -m venv .venv && source .venv/bin/activate
+python -m pip install -e ".[dev]"      # builds the Cython extension, installs bleak
+python -m pytest
+```
+
+Or with uv:
+
+```bash
+uv sync
+uv run pytest
+```
+
+Linux/BlueZ is the first supported platform (BLE through `bleak`).
+
+## Layout
+
+| Path                      | Contents                                                                                        |
+| ------------------------- | ----------------------------------------------------------------------------------------------- |
+| `src/wedopy/`             | Public API: `Hub`, `Motor`, `MotorGroup`, sensors, `LED`, `Button`, `task`, `tasks`, exceptions |
+| `wedopy_core/_wedopy.pyx` | Cython core: protocol codecs, state machine, single-writer coordinator, heartbeat, watchdog     |
+| `wedopy_core/transport/`  | `Transport` interface, `BleakTransport` (BLE), `SimulatedHub` (tests)                           |
+| `wedopy_core/protocol/`   | UUIDs and constants                                                                             |
+| `wedopy_core/runtime/`    | `Timing` parameters, process `supervisor`                                                       |
+| `tests/`, `examples/`     | pytest suite (simulated hub), runnable examples                                                 |
+
+Deviations from the spec's tree: `src/wedo/` is `src/wedopy/` (the import name is `wedopy`); the
+compiled module is `wedopy_core._wedopy`; protocol codecs live in the Cython core instead of
+separate `.py` files; exceptions are defined in `wedopy_core/exceptions.py` and re-exported by
+`wedopy.exceptions`, so the core never imports the public package.
+
+## Behaviour worth knowing
+
+- Every BLE operation goes through one coordinator thread (single writer). Writes and the
+  heartbeat are always _with response_; there is no silent fallback to write-without-response.
+- While any motor has a non-zero speed, a heartbeat (Battery Level read) runs every 0.5 s. With
+  no valid ACK for 2 s the watchdog stops the motors with emergency priority (2 attempts), logs
+  the result on `wedopy.watchdog`, and moves the hub to `error`. The watchdog and heartbeat run on
+  their own thread, so a blocked task scheduler cannot disable them.
+- Normal operations time out after 1 s, which bounds how long an emergency request can wait
+  behind an in-flight operation (an in-flight BLE call cannot be aborted).
+- Stop profile is `nobarrier`. `strong` is not offered.
+- `hub.tasks.cancel()` never stops motors; protect motors with `try/finally`, or call
+  `hub.stop_all()`. Leaving `with Hub()` cancels tasks first, then stops motors.
+- Logging goes through the standard `logging` module (`wedopy`, `wedopy.watchdog`, `wedopy.tasks`).
+- Sensors only notify on change. `read_angle()`, `read_direction()` and the distance sensor
+  return the _last_ value; if the physical value has not changed since the last notification,
+  the call blocks until the sensor sends a new sample or the timeout fires. Move/incline the
+  sensor (or expose it to a new distance) after configuring it.
+- The tilt sensor is a 4-position switch, not an accelerometer. Its direction mode (1) uses
+  `UNIT_SI` (4-byte `float32`); its angle mode (0) requires `UNIT_RAW` (2-byte `int8` pair)
+  — with `UNIT_SI` the hub silently ignores the configuration. Bump mode (2) is accepted by
+  the hub but never emits; the firmware does not implement it.
+
+## Status
+
+Verified with the simulated hub and on real WeDo 2.0 hardware (Nov 2026):
+
+- Compiled Cython build (`wedopy_core._wedopy`).
+- `BleakTransport` on Linux/BlueZ: connect, port discovery, notifications.
+- Tilt sensor: direction mode (1, `UNIT_SI`) and angle mode (0, `UNIT_RAW`).
+- Battery, button, LED, motor, distance sensor.
+
+**Not yet verified on hardware:** watchdog timings under a real BLE stall,
+`refresh_ports()` replay, behaviour when the process is killed with the link
+open, and the `strong` stop profile (not implemented).
+
+`wedopy_core/_wedopy.pyx` is written in the subset of Cython that is also valid Python, so
+`tests/conftest.py` can run it uncompiled when the extension is not built (it warns). Typed
+`cdef` optimisations can be added later once profiling shows they matter.

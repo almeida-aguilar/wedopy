@@ -1,0 +1,50 @@
+[build-system]
+requires = ["setuptools>=68", "wheel", "Cython>=3.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "wedopy"
+version = "0.1.0"
+description = "Python library for the LEGO WeDo 2.0 Smart Hub over BLE (API in Python, core in Cython)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+license-files = ["LICENSE"]
+dependencies = ["bleak>=0.22"]
+keywords = ["lego", "wedo", "wedo2", "ble", "bluetooth", "robotics", "iot", "cython"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Education",
+    "Topic :: Software Development :: Embedded Systems",
+    "Topic :: System :: Hardware",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Operating System :: POSIX :: Linux",
+]
+
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "Cython>=3.0"]
+
+[tool.setuptools]
+package-dir = { "wedopy" = "src/wedopy", "wedopy_core" = "wedopy_core" }
+packages = [
+    "wedopy",
+    "wedopy_core",
+    "wedopy_core.protocol",
+    "wedopy_core.transport",
+    "wedopy_core.runtime",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.2",
+]

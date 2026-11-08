@@ -1,0 +1,5 @@
+bleak>=0.22
+
+[dev]
+pytest>=7
+Cython>=3.0

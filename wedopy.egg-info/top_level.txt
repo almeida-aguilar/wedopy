@@ -1,0 +1,2 @@
+wedopy
+wedopy_core
