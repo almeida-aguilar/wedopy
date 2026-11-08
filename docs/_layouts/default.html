@@ -6,6 +6,7 @@
   <title>{% if page.title %}{{ page.title }} | {% endif %}{{ site.title }} - LEGO WeDo 2.0 con Python</title>
   <meta name="description" content="{% if page.description %}{{ page.description }}{% else %}{{ site.description }}{% endif %}">
   <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/dracula.min.css">
 </head>
 <body>
 
@@ -101,6 +102,18 @@
     <p style="margin-top: 0.35rem; font-size: 0.8rem;">LEGO® es una marca registrada del Grupo LEGO, que no patrocina ni avala este proyecto de código abierto.</p>
   </footer>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/bash.min.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document.querySelectorAll("pre code").forEach((el) => {
+        if (!el.querySelector("span")) {
+          hljs.highlightElement(el);
+        }
+      });
+    });
+  </script>
   <script src="{{ '/assets/js/main.js' | relative_url }}"></script>
 </body>
 </html>

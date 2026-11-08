@@ -24,23 +24,47 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // Code copy buttons
+  // Code copy buttons and language headers
   document.querySelectorAll("pre").forEach((pre) => {
+    // Avoid double wrapping if already inside code-container
+    if (pre.parentElement && pre.parentElement.classList.contains("code-container")) {
+      return;
+    }
+
     const container = document.createElement("div");
     container.className = "code-container";
     pre.parentNode.insertBefore(container, pre);
-    container.appendChild(pre);
+
+    // Detect language from class
+    let lang = "";
+    const code = pre.querySelector("code");
+    const testClasses = (pre.className + " " + (code ? code.className : "") + " " + (pre.closest(".highlighter-rouge") ? pre.closest(".highlighter-rouge").className : ""));
+    const match = testClasses.match(/language-(\w+)/);
+    if (match) {
+      lang = match[1];
+    }
+
+    const header = document.createElement("div");
+    header.className = "code-header";
+
+    const langSpan = document.createElement("span");
+    langSpan.className = "code-lang";
+    langSpan.textContent = lang ? lang.toUpperCase() : "CÓDIGO";
+    header.appendChild(langSpan);
 
     const button = document.createElement("button");
     button.className = "copy-button";
     button.textContent = "Copiar";
     button.setAttribute("aria-label", "Copiar código al portapapeles");
-    container.appendChild(button);
+    header.appendChild(button);
+
+    container.appendChild(header);
+    container.appendChild(pre);
 
     button.addEventListener("click", async () => {
-      const code = pre.querySelector("code") ? pre.querySelector("code").innerText : pre.innerText;
+      const textToCopy = code ? code.innerText : pre.innerText;
       try {
-        await navigator.clipboard.writeText(code);
+        await navigator.clipboard.writeText(textToCopy);
         button.textContent = "¡Copiado!";
         setTimeout(() => {
           button.textContent = "Copiar";
