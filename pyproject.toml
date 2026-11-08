@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "wedopy"
-version = "0.1.0"
+version = "0.1.2"
 description = "Python library for the LEGO WeDo 2.0 Smart Hub over BLE (API in Python, core in Cython)"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -25,6 +25,7 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
     "Operating System :: POSIX :: Linux",
+    "Operating System :: Microsoft :: Windows",
 ]
 
 

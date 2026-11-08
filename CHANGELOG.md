@@ -19,3 +19,9 @@ First implementation of design spec 1.2.0 (`WeDo_2_0_con_Cython.md`).
 - Not yet validated on hardware: watchdog timings under a real BLE stall,
   `refresh_ports()` replay, behaviour when the process is killed with the link
   open, and the `strong` stop profile (not implemented).
+
+## 0.1.2
+
+- Soporte documentado para Windows (instalación, solución de problemas).
+- Actualización de la documentación.
+- Constantes de color en `LED`

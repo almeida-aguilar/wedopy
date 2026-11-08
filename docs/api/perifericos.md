@@ -42,24 +42,32 @@ Apaga el LED (equivalente a `rgb(0, 0, 0)`).
 ```python
 hub.led.index(index: int) -> None
 ```
-Aplica uno de los colores predefinidos de la paleta oficial de WeDo 2.0 (enteros entre `0` y `10`).
+Aplica uno de los colores predefinidos de la paleta oficial de WeDo 2.0 (enteros entre `0` y `10` o mediante las constantes de color disponibles en `wedopy` o en la clase `LED`).
 
-| Índice | Color visual |
-| :---: | :--- |
-| `0` | **Apagado** |
-| `1` | **Rosa** |
-| `2` | **Morado** |
-| `3` | **Azul** |
-| `4` | **Celeste / Cian** |
-| `5` | **Verde** |
-| `6` | **Amarillo** |
-| `7` | **Naranja** |
-| `8` | **Rojo** |
-| `9` | **Blanco brillante** |
-| `10` | **Blanco tenue** |
+| Índice | Constante | Alias / Alias ES | Color visual |
+| :---: | :--- | :--- | :--- |
+| `0` | `OFF` | `BLACK`, `APAGADO` | **Apagado** |
+| `1` | `PINK` | `ROSA` | **Rosa** |
+| `2` | `PURPLE` | `VIOLET`, `MORADO` | **Morado** |
+| `3` | `BLUE` | `AZUL` | **Azul** |
+| `4` | `CYAN` | `SKY_BLUE`, `LIGHT_BLUE`, `CIAN`, `CELESTE` | **Celeste / Cian** |
+| `5` | `GREEN` | `VERDE` | **Verde** |
+| `6` | `YELLOW` | `AMARILLO` | **Amarillo** |
+| `7` | `ORANGE` | `NARANJA` | **Naranja** |
+| `8` | `RED` | `ROJO` | **Rojo** |
+| `9` | `WHITE` | `BRIGHT_WHITE`, `BLANCO` | **Blanco brillante** |
+| `10` | `DIM_WHITE` | `SOFT_WHITE`, `BLANCO_TENUE` | **Blanco tenue** |
 
 ```python
-hub.led.index(5)  # Enciende en verde
+from wedopy import Hub, GREEN, RED, LED
+
+with Hub() as hub:
+    # Usando la constante directamente
+    hub.led.index(GREEN)
+
+    # O a través de la clase o la instancia
+    hub.led.index(LED.RED)
+    hub.led.index(hub.led.BLUE)
 ```
 
 #### `rgb(red, green, blue)`
